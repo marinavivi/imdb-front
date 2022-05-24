@@ -1,12 +1,14 @@
 import React, { Suspense, useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import HomePage from '../pages/HomePage';
-import LoginPage from '../pages/LoginPage';
-import { HOME_PAGE, LOGIN_PAGE, MOVIE_LIST_PAGE, REGISTER_PAGE } from '../constants/routes';
-import RegisterPage from "../pages/RegisterPage";
-import { useSelector, useDispatch } from "react-redux";
-import MovieListPage from "../pages/MovieListPage";
+import { useDispatch, useSelector } from "react-redux";
+import { HOME, LOGIN, MOVIES, REGISTER } from '../constants/routes';
+import Home from '../pages/Home'
+import Login from '../components/auth/Login';
+import Register from '../components/auth/Register';
+import Movies from "./movie/Movies";
 import { fetchAuthenticatedUser } from '../store/auth/actions';
+import { getItem } from "../services/LocalStorageService";
+import { isAuthenticatedSelector } from "../store/auth/selectors";
 
 const AuthProtection = (
     { children, isOnlyForAuthUsers, isOnlyForGuests }
@@ -17,20 +19,20 @@ const AuthProtection = (
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const token = localStorage.getItem('token') ? true : false;
+        const token = getItem('token') ? true : false;
+
         if (token) {
             dispatch(fetchAuthenticatedUser());
         }
         // eslint-disable-next-line
     }, [])
 
-    const user = useSelector(state => state.auth.user ? true : false);
-    console.log(user);
+    const user = useSelector(isAuthenticatedSelector());
 
     useEffect(() => {
-        
-        if (isOnlyForAuthUsers && !user) return navigate(LOGIN_PAGE);
-        if (isOnlyForGuests && user) return navigate(HOME_PAGE);
+
+        if (isOnlyForAuthUsers && !user) return navigate(LOGIN);
+        if (isOnlyForGuests && user) return navigate(HOME);
 
         // eslint-disable-next-line
     }, [user, isOnlyForAuthUsers, isOnlyForGuests]);
@@ -62,10 +64,10 @@ const ProtectedRouterWrapper = ({
 const Router = () => {
     return (
         <Routes>
-            <Route path={HOME_PAGE} element={<ProtectedRouterWrapper component={HomePage} isAuthenticated />} />
-            <Route path={LOGIN_PAGE} element={<ProtectedRouterWrapper component={LoginPage} isGuest />} />
-            <Route path={REGISTER_PAGE} element={<ProtectedRouterWrapper component={RegisterPage} isGuest />} />
-            <Route path={MOVIE_LIST_PAGE} element={<ProtectedRouterWrapper component={MovieListPage} isAuthenticated />} />
+            <Route path={HOME} element={<ProtectedRouterWrapper component={Home} isAuthenticated />} />
+            <Route path={LOGIN} element={<ProtectedRouterWrapper component={Login} isGuest />} />
+            <Route path={REGISTER} element={<ProtectedRouterWrapper component={Register} isGuest />} />
+            <Route path={MOVIES} element={<ProtectedRouterWrapper component={Movies} isAuthenticated />} />
         </Routes>
     )
 }
