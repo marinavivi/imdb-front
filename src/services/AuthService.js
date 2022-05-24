@@ -1,92 +1,63 @@
 import httpService from './HttpService';
 
 const ROUTES = {
-    LOGIN: '/auth/login',
-    ME: '/auth/me',
-    REGISTER: '/auth/register',
+  LOGIN: 'login/',
+  REGISTER: 'register/',
+  ME: 'users/me/',
 }
 
 class AuthService {
-    constructor(httpService) {
-        this.httpService = httpService;
-        this.init();
-    }
-    init = () => {
-        this.setAuthToken(this.getAccessToken());
-        this.httpService.addRequestInterceptor(this.checkTokenExpiration);
-        this.httpService.addResponseInterceptors (
-            this.handleSuccessResponse,
-            this.handleErrorResponse
-        );
-    };
-    getAccessToken = () => {
-        return localStorage.getItem('token')
-    }
-    setAuthToken = (token) => {
-        if(token) {
-            localStorage.setItem('token', token);
+  constructor(httpService) {
+    this.httpService = httpService;
+    this.init();
+  }
 
-            this.httpService.attachHeaders({
-                Authorization: `Bearer ${token}`,
-            })
-        }
+  init = () => {
+    this.setAuthToken(this.getAccessToken());
+    this.httpService.addRequestInterceptor();
+    this.httpService.addResponseInterceptors();
+  };
+
+  getAccessToken = () => {
+    return JSON.parse(localStorage.getItem('token'));
+  };
+
+  setAuthToken = (token) => {
+    if (token) {
+      localStorage.setItem('token', JSON.stringify(token));
+
+      this.httpService.attachHeaders({
+        Authorization: `Bearer ${token}`,
+      });
     }
-    login = async (data) => {
-        const { accesToken: token } = await this.httpService.request({
-            url: ROUTES.LOGIN,
-            method: 'POST',
-            data,
-        });
-        this.setAuthToken(token);
+  };
 
-        return token;
-    }
+  login = async (data) => {
+    const { access: token } = await this.httpService.request({
+      url: ROUTES.LOGIN,
+      method: 'POST',
+      data,
+    });
 
-    fetchAuthenticatedUser = () => {
-        return this.httpService.request({
-          url: ROUTES.ME,
-          method: 'GET',
-        });
-      };
+    this.setAuthToken(token);
 
-    register = async (data) => {
-        const { accesToken: token } = await this.httpService.request({
-            url: ROUTES.REGISTER,
-            method: 'POST',
-            data,
-        });
-        this.setAuthToken(token);
+    return token;
+  };
 
-        return token;
-    }
+  register = async (data) => {
+    await this.httpService.request({
+      url: ROUTES.REGISTER,
+      method: 'POST',
+      data,
+    });
+  }
 
-    getUserFromUrl = async () => {
-        return this.httpService.request({
-            url: '/todos/1',
-            method: 'GET',
-        })
-    }
-    
-    handleSuccessResponse = (response) => {
-        return response;
-    }
-
-    handleErrorResponse = (error) => {
-        try {
-          const { status } = error.response;
-    
-          /* eslint-disable default-case */
-          switch (status) {
-            case 401:
-              this.destroySession();
-              break;
-          }
-    
-          return Promise.reject(error);
-        } catch (e) {
-          return Promise.reject(error);
-        }
-      };
+  fetchAuthenticatedUser = () => {
+    return this.httpService.request({
+      url: ROUTES.ME,
+      method: 'GET',
+    });
+  };
 
 }
 

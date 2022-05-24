@@ -1,17 +1,16 @@
-import { GET_USER_FROM_URL_SUCCESS } from "./actionTypes";
+import { FETCH_AUTHENTICATED_USER_SUCCESS } from "./actionTypes";
 
 const initialState = {
-    user: null
+    user: null,
 }
 
 const authReducer = (state = initialState, action) => {
-    
+   
     switch (action.type) {
-        case GET_USER_FROM_URL_SUCCESS:
+
+        case FETCH_AUTHENTICATED_USER_SUCCESS:
             const { user } = action
-            return {
-                ...state, user: user
-            }
+            return { ...state, user}
         default:
             return state
     }

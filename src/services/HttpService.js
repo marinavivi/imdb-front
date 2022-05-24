@@ -5,14 +5,14 @@ import mapKeys from 'lodash/mapKeys';
 class HttpClient {
     constructor () {
         this.client = axios.create ({
-            baseURL: 'https://jsonplaceholder.typicode.com'
+            baseURL: 'http://127.0.0.1:8000/'
         })
     }
 
     request = (requestConfig) => {
         return this.client(requestConfig)
     }
-    
+
     addRequestInterceptor = (callback) => {
         return this.client.interceptors.request.use(callback);
     };
@@ -34,6 +34,7 @@ class HttpService {
         this.httpClient = httpClient;
         this.init();
     }
+    
     init = () => {
         this.addResponseInterceptors(
             (response) => mapKeys(response.data, (_, key) => camelCase(key)),
