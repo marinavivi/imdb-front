@@ -1,10 +1,10 @@
-import httpService from './HttpService';
+import httpService from "./HttpService";
 
 const ROUTES = {
-  LOGIN: 'login/',
-  REGISTER: 'register/',
-  ME: 'users/me/',
-}
+  LOGIN: "login/",
+  REGISTER: "register/",
+  ME: "users/me/",
+};
 
 class AuthService {
   constructor(httpService) {
@@ -19,12 +19,12 @@ class AuthService {
   };
 
   getAccessToken = () => {
-    return JSON.parse(localStorage.getItem('token'));
+    return JSON.parse(localStorage.getItem("token"));
   };
 
   setAuthToken = (token) => {
     if (token) {
-      localStorage.setItem('token', JSON.stringify(token));
+      localStorage.setItem("token", JSON.stringify(token));
 
       this.httpService.attachHeaders({
         Authorization: `Bearer ${token}`,
@@ -35,7 +35,7 @@ class AuthService {
   login = async (data) => {
     const { access: token } = await this.httpService.request({
       url: ROUTES.LOGIN,
-      method: 'POST',
+      method: "POST",
       data,
     });
 
@@ -47,21 +47,19 @@ class AuthService {
   register = async (data) => {
     await this.httpService.request({
       url: ROUTES.REGISTER,
-      method: 'POST',
+      method: "POST",
       data,
     });
-  }
+  };
 
   fetchAuthenticatedUser = () => {
     return this.httpService.request({
       url: ROUTES.ME,
-      method: 'GET',
+      method: "GET",
     });
   };
-
 }
 
 const authService = new AuthService(httpService);
 
 export default authService;
-

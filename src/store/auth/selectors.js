@@ -1,8 +1,8 @@
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
+
+const authStateSelector = (state) => state.auth;
 
 const isAuthenticatedSelector = () =>
-  createSelector(state => state.auth.user);
+  createSelector(authStateSelector, (state) => !!state.user);
 
-export {
-  isAuthenticatedSelector,
-}
+export { isAuthenticatedSelector };

@@ -1,4 +1,4 @@
-export const AUTH = '[Auth]';
+export const AUTH = "[Auth]";
 
 export const LOGIN_REQUEST = `${AUTH} LOGIN_REQUEST`;
 
