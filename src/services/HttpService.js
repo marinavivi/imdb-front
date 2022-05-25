@@ -1,65 +1,65 @@
-import axios from 'axios';
-import camelCase from 'lodash/camelCase';
-import mapKeys from 'lodash/mapKeys';
+import axios from "axios";
+import camelCase from "lodash/camelCase";
+import mapKeys from "lodash/mapKeys";
 
 class HttpClient {
-    constructor () {
-        this.client = axios.create ({
-            baseURL: 'http://127.0.0.1:8000/'
-        })
-    }
+  constructor() {
+    this.client = axios.create({
+      baseURL: "http://127.0.0.1:8000/",
+    });
+  }
 
-    request = (requestConfig) => {
-        return this.client(requestConfig)
-    }
+  request = (requestConfig) => {
+    return this.client(requestConfig);
+  };
 
-    addRequestInterceptor = (callback) => {
-        return this.client.interceptors.request.use(callback);
-    };
-    
-    addResponseInterceptors = (successCallback, errorCallback) => {
-        return this.client.interceptors.response.use(
-          successCallback,
-          errorCallback
-        );
-    };
-    
-    attachHeaders = (headers) => {
-        Object.assign(this.client.defaults.headers, headers)
-    }
+  addRequestInterceptor = (callback) => {
+    return this.client.interceptors.request.use(callback);
+  };
+
+  addResponseInterceptors = (successCallback, errorCallback) => {
+    return this.client.interceptors.response.use(
+      successCallback,
+      errorCallback
+    );
+  };
+
+  attachHeaders = (headers) => {
+    Object.assign(this.client.defaults.headers, headers);
+  };
 }
 
 class HttpService {
-    constructor (httpClient) {
-        this.httpClient = httpClient;
-        this.init();
-    }
-    
-    init = () => {
-        this.addResponseInterceptors(
-            (response) => mapKeys(response.data, (_, key) => camelCase(key)),
-            (error) => Promise.reject(error.response)
-          );
-    }
+  constructor(httpClient) {
+    this.httpClient = httpClient;
+    this.init();
+  }
 
-    request = (requestConfig) => {
-        return this.httpClient.request(requestConfig);
-    }
+  init = () => {
+    this.addResponseInterceptors(
+      (response) => mapKeys(response.data, (_, key) => camelCase(key)),
+      (error) => Promise.reject(error.response)
+    );
+  };
 
-    attachHeaders = (headers) => {
-        this.httpClient.attachHeaders(headers);
-    };
+  request = (requestConfig) => {
+    return this.httpClient.request(requestConfig);
+  };
 
-    addRequestInterceptor = (callback) => {
-        return this.httpClient.addRequestInterceptor(callback);
-    };
+  attachHeaders = (headers) => {
+    this.httpClient.attachHeaders(headers);
+  };
 
-    addResponseInterceptors = (successCallback, errorCallback) => {
-        return this.httpClient.addResponseInterceptors(
-          successCallback,
-          errorCallback
-        );
-    };
+  addRequestInterceptor = (callback) => {
+    return this.httpClient.addRequestInterceptor(callback);
+  };
+
+  addResponseInterceptors = (successCallback, errorCallback) => {
+    return this.httpClient.addResponseInterceptors(
+      successCallback,
+      errorCallback
+    );
+  };
 }
 
 const httpService = new HttpService(new HttpClient());
