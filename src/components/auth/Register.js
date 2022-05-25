@@ -1,14 +1,8 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { register } from '../../store/auth/actions';
-import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import { RegisterSchema } from '../../validations/authValidation';
 
-const Register = () => {
-
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+const Register = ({handleRegisterOnSubmit}) => {
 
     return (
         <div>
@@ -20,9 +14,7 @@ const Register = () => {
                     password: '',
                 }}
                 validationSchema={RegisterSchema}
-                onSubmit={values => {
-                    dispatch(register(values.email, values.first_name, values.password, () => navigate('/')))
-                }}
+                onSubmit={(values) => handleRegisterOnSubmit(values)}
             >
                 {({ errors, touched }) => (
                     <Form>

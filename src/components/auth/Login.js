@@ -1,14 +1,9 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { login } from '../../store/auth/actions';
-import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import { LoginSchema } from '../../validations/authValidation';
+import { Link } from 'react-router-dom';
 
-const Login = () => {
-
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+const Login = ({ handleLoginOnSubmit }) => {
 
     return (
         <div>
@@ -19,9 +14,7 @@ const Login = () => {
                     password: '',
                 }}
                 validationSchema={LoginSchema}
-                onSubmit={values => {
-                    dispatch(login(values.email, values.password, () => navigate('/')))
-                }}
+                onSubmit={(values) => handleLoginOnSubmit(values)}
             >
                 {({ errors, touched }) => (
                     <Form>
@@ -34,7 +27,7 @@ const Login = () => {
                 )}
             </Formik>
             <br />
-            <span><Link to="/register">Register</Link></span>
+            <Link to="/register">Register</Link>
         </div>
     )
 };

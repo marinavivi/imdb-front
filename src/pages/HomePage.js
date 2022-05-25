@@ -1,6 +1,6 @@
 import Movies from "../components/movie/Movies"
 
-const Home = () => {
+const HomePage = () => {
     
     return (
         <div>
@@ -8,4 +8,4 @@ const Home = () => {
         </div>
     )
 }
-export default Home
+export default HomePage

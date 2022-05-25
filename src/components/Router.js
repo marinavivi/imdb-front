@@ -1,10 +1,10 @@
 import React, { Suspense, useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { HOME, LOGIN, MOVIES, REGISTER } from '../constants/routes';
-import Home from '../pages/Home'
-import Login from '../components/auth/Login';
-import Register from '../components/auth/Register';
+import { HOME_PAGE, LOGIN_PAGE, MOVIES, REGISTER_PAGE } from '../constants/routes';
+import HomePage from '../pages/HomePage'
+import LoginPage from "../pages/LoginPage";
+import RegisterPage from "../pages/RegisterPage";
 import Movies from "./movie/Movies";
 import { fetchAuthenticatedUser } from '../store/auth/actions';
 import { getItem } from "../services/LocalStorageService";
@@ -31,8 +31,8 @@ const AuthProtection = (
 
     useEffect(() => {
 
-        if (isOnlyForAuthUsers && !user) return navigate(LOGIN);
-        if (isOnlyForGuests && user) return navigate(HOME);
+        if (isOnlyForAuthUsers && !user) return navigate(LOGIN_PAGE);
+        if (isOnlyForGuests && user) return navigate(HOME_PAGE);
 
         // eslint-disable-next-line
     }, [user, isOnlyForAuthUsers, isOnlyForGuests]);
@@ -64,9 +64,9 @@ const ProtectedRouterWrapper = ({
 const Router = () => {
     return (
         <Routes>
-            <Route path={HOME} element={<ProtectedRouterWrapper component={Home} isAuthenticated />} />
-            <Route path={LOGIN} element={<ProtectedRouterWrapper component={Login} isGuest />} />
-            <Route path={REGISTER} element={<ProtectedRouterWrapper component={Register} isGuest />} />
+            <Route path={HOME_PAGE} element={<ProtectedRouterWrapper component={HomePage} isAuthenticated />} />
+            <Route path={LOGIN_PAGE} element={<ProtectedRouterWrapper component={LoginPage} isGuest />} />
+            <Route path={REGISTER_PAGE} element={<ProtectedRouterWrapper component={RegisterPage} isGuest />} />
             <Route path={MOVIES} element={<ProtectedRouterWrapper component={Movies} isAuthenticated />} />
         </Routes>
     )
