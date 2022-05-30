@@ -18,11 +18,11 @@ const Login = ({ handleOnSubmit }) => {
         {({ errors, touched }) => (
           <Form>
             <Field name="email" type="email" />
-            {errors.email && touched.email ? <div>{errors.email}</div> : null}
+            {errors.email && touched.email && <div>{errors.email}</div>}
             <Field name="password" type="password" />
-            {errors.password && touched.password ? (
+            {errors.password && touched.password && (
               <div>{errors.password}</div>
-            ) : null}
+            )}
             <button type="submit">Submit</button>
           </Form>
         )}

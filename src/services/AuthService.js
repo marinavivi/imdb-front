@@ -1,9 +1,12 @@
 import httpService from "./HttpService";
+import jwtDecode from "jwt-decode";
+import { getItem, setItem } from "./LocalStorageService";
 
 const ROUTES = {
   LOGIN: "login/",
   REGISTER: "register/",
   ME: "users/me/",
+  REFRESH: "refresh/",
 };
 
 class AuthService {
@@ -14,17 +17,21 @@ class AuthService {
 
   init = () => {
     this.setAuthToken(this.getAccessToken());
-    this.httpService.addRequestInterceptor();
+    this.httpService.addRequestInterceptor(this.checkTokenExpiration);
     this.httpService.addResponseInterceptors();
   };
 
   getAccessToken = () => {
-    return JSON.parse(localStorage.getItem("token"));
+    return {
+      token: getItem("token"),
+      refresh: getItem("refresh"),
+    };
   };
 
-  setAuthToken = (token) => {
+  setAuthToken = ({ token, refresh }) => {
     if (token) {
-      localStorage.setItem("token", JSON.stringify(token));
+      setItem("token", token);
+      setItem("refresh", refresh);
 
       this.httpService.attachHeaders({
         Authorization: `Bearer ${token}`,
@@ -32,16 +39,28 @@ class AuthService {
     }
   };
 
-  login = async (data) => {
-    const { access: token } = await this.httpService.request({
-      url: ROUTES.LOGIN,
+  refreshToken = async (refresh) => {
+    const { data } = await this.httpService.request({
+      url: ROUTES.REFRESH,
       method: "POST",
-      data,
+      data: { refresh: refresh },
     });
 
-    this.setAuthToken(token);
+    this.setAuthToken(data.access);
 
-    return token;
+    return data;
+  };
+
+  login = async (loginData) => {
+    const { data } = await this.httpService.request({
+      url: ROUTES.LOGIN,
+      method: "POST",
+      data: loginData,
+    });
+
+    this.setAuthToken({ token: data.access, refresh: data.refresh });
+
+    return data.access;
   };
 
   register = async (data) => {
@@ -52,11 +71,30 @@ class AuthService {
     });
   };
 
-  fetchAuthenticatedUser = () => {
-    return this.httpService.request({
+  fetchAuthenticatedUser = async () => {
+    const response = await this.httpService.request({
       url: ROUTES.ME,
       method: "GET",
     });
+
+    return response.data;
+  };
+
+  checkTokenExpiration = async (request) => {
+    if (request.url === ROUTES.REFRESH) {
+      return request;
+    }
+
+    const { token, refresh } = this.getAccessToken();
+
+    if (token && Date.now() / 1000 >= jwtDecode(token).exp) {
+      const { access } = await this.refreshToken(refresh);
+      request.headers.Authorization = `Bearer ${access}`;
+
+      return request;
+    }
+
+    return request;
   };
 }
 

@@ -2,18 +2,22 @@ import React, { Suspense, useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  ADD_MOVIE,
   HOME_PAGE,
   LOGIN_PAGE,
   MOVIES,
   REGISTER_PAGE,
+  SINGLE_MOVIE,
 } from "../constants/routes";
 import HomePage from "../pages/HomePage";
-import LoginPage from "../pages/LoginPage";
-import RegisterPage from "../pages/RegisterPage";
-import Movies from "./movie/Movies";
+import LoginPage from "../pages/auth/LoginPage";
+import RegisterPage from "../pages/auth/RegisterPage";
+import MoviesPage from "../pages/movie/MoviesPage";
+import AddMoviePage from "../pages/movie/AddMoviePage";
 import { fetchAuthenticatedUser } from "../store/auth/actions";
 import { getItem } from "../services/LocalStorageService";
 import { isAuthenticatedSelector } from "../store/auth/selectors";
+import SingleMoviePage from "../pages/movie/SingleMoviePage";
 
 const AuthProtection = ({ children, isOnlyForAuthUsers, isOnlyForGuests }) => {
   const navigate = useNavigate();
@@ -85,7 +89,21 @@ const Router = () => {
       />
       <Route
         path={MOVIES}
-        element={<ProtectedRouterWrapper component={Movies} isAuthenticated />}
+        element={
+          <ProtectedRouterWrapper component={MoviesPage} isAuthenticated />
+        }
+      />
+      <Route
+        path={ADD_MOVIE}
+        element={
+          <ProtectedRouterWrapper component={AddMoviePage} isAuthenticated />
+        }
+      />
+      <Route
+        path={SINGLE_MOVIE}
+        element={
+          <ProtectedRouterWrapper component={SingleMoviePage} isAuthenticated />
+        }
       />
     </Routes>
   );

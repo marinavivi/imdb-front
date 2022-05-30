@@ -18,15 +18,15 @@ const Register = ({ handleOnSubmit }) => {
         {({ errors, touched }) => (
           <Form>
             <Field name="email" type="email" />
-            {errors.email && touched.email ? <div>{errors.email}</div> : null}
+            {errors.email && touched.email && <div>{errors.email}</div>}
             <Field name="first_name" />
-            {errors.first_name && touched.first_name ? (
+            {errors.first_name && touched.first_name && (
               <div>{errors.first_name}</div>
-            ) : null}
+            )}
             <Field name="password" type="password" />
-            {errors.password && touched.password ? (
+            {errors.password && touched.password && (
               <div>{errors.password}</div>
-            ) : null}
+            )}
             <button type="submit">Submit</button>
           </Form>
         )}
