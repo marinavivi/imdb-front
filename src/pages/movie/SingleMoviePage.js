@@ -7,11 +7,11 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 const SingleMoviePage = () => {
-  const params = useParams();
+  const { id } = useParams();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getMovie(params.id));
+    dispatch(getMovie(id));
     // eslint-disable-next-line
   }, []);
 

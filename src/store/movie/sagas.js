@@ -12,10 +12,14 @@ export function* addMovie({ data, onSuccess }) {
   }
 }
 
-export function* getMovies() {
+export function* getMovies(action) {
   try {
-    const movies = yield call(movieService.getMovies);
-    yield put(getMoviesSuccess(movies));
+    const movies = yield call(movieService.getMovies, {
+      page: action.page,
+      title: action.title,
+      genre: action.genre,
+    });
+    yield put(getMoviesSuccess(movies.results, movies.count));
   } catch (error) {
     console.log(error);
   }

@@ -14,16 +14,20 @@ export function addMovie(data, onSuccess = () => {}) {
   };
 }
 
-export function getMovies() {
+export function getMovies(page, title, genre) {
   return {
     type: GET_MOVIES,
+    page,
+    title,
+    genre,
   };
 }
 
-export function getMoviesSuccess(movies) {
+export function getMoviesSuccess(movies, count) {
   return {
     type: GET_MOVIES_SUCCESS,
     movies,
+    count,
   };
 }
 

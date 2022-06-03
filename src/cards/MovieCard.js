@@ -1,10 +1,12 @@
 import * as React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  CardActionArea,
+  Typography,
+} from "@mui/material";
 import { Link } from "react-router-dom";
-import { CardActionArea } from "@mui/material";
 
 const MovieCard = ({ movie }) => {
   const path = "/movies/" + movie.id;
@@ -19,7 +21,19 @@ const MovieCard = ({ movie }) => {
           alt="movie"
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component={Link} to={path}>
+          <Typography
+            gutterBottom
+            variant="h5"
+            component={Link}
+            to={path}
+            sx={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "-webkit-box",
+              WebkitLineClamp: "1",
+              WebkitBoxOrient: "vertical",
+            }}
+          >
             {movie.title}
           </Typography>
           <Typography

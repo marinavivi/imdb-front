@@ -1,12 +1,18 @@
 import httpService from "./HttpService";
 import jwtDecode from "jwt-decode";
 import { getItem, setItem } from "./LocalStorageService";
+import { TOKEN, REFRESH } from "../constants/constants";
 
 const ROUTES = {
   LOGIN: "login/",
   REGISTER: "register/",
   ME: "users/me/",
   REFRESH: "refresh/",
+};
+
+const METODS = {
+  GET: "GET",
+  POST: "POST",
 };
 
 class AuthService {
@@ -23,15 +29,15 @@ class AuthService {
 
   getAccessToken = () => {
     return {
-      token: getItem("token"),
-      refresh: getItem("refresh"),
+      token: getItem(TOKEN),
+      refresh: getItem(REFRESH),
     };
   };
 
   setAuthToken = ({ token, refresh }) => {
     if (token) {
-      setItem("token", token);
-      setItem("refresh", refresh);
+      setItem(TOKEN, token);
+      setItem(REFRESH, refresh);
 
       this.httpService.attachHeaders({
         Authorization: `Bearer ${token}`,
@@ -42,7 +48,7 @@ class AuthService {
   refreshToken = async (refresh) => {
     const { data } = await this.httpService.request({
       url: ROUTES.REFRESH,
-      method: "POST",
+      method: METODS.POST,
       data: { refresh: refresh },
     });
 
@@ -54,7 +60,7 @@ class AuthService {
   login = async (loginData) => {
     const { data } = await this.httpService.request({
       url: ROUTES.LOGIN,
-      method: "POST",
+      method: METODS.POST,
       data: loginData,
     });
 
@@ -66,7 +72,7 @@ class AuthService {
   register = async (data) => {
     await this.httpService.request({
       url: ROUTES.REGISTER,
-      method: "POST",
+      method: METODS.POST,
       data,
     });
   };
@@ -74,7 +80,7 @@ class AuthService {
   fetchAuthenticatedUser = async () => {
     const response = await this.httpService.request({
       url: ROUTES.ME,
-      method: "GET",
+      method: METODS.GET,
     });
 
     return response.data;

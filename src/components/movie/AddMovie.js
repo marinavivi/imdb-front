@@ -36,9 +36,9 @@ const AddMovie = ({ handleOnSubmit, genres }) => {
                 <div>{errors.coverImage}</div>
               )}
               <Field as="select" name="genre">
-                {genres.map((g) => (
-                  <option key={g.id} value={g.id}>
-                    {g.name}
+                {genres.map((genre) => (
+                  <option key={genre.id} value={genre.id}>
+                    {genre.name}
                   </option>
                 ))}
               </Field>

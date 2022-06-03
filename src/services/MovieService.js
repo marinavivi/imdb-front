@@ -1,7 +1,13 @@
 import httpService from "./HttpService";
 
 const ROUTES = {
-  GET_MOVIES: "movies/",
+  GET_MOVIES: "/movies/?page=",
+  GET_MOVIE: "/movies/",
+};
+
+const METODS = {
+  GET: "GET",
+  POST: "POST",
 };
 
 class MovieService {
@@ -15,24 +21,24 @@ class MovieService {
 
     const response = await httpService.request({
       url: ROUTES.GET_MOVIES,
-      method: "POST",
+      method: METODS.POST,
       data: formData,
     });
     return response.data;
   };
 
-  getMovies = async () => {
+  getMovies = async ({ page, title, genre }) => {
     const response = await httpService.request({
-      url: ROUTES.GET_MOVIES,
-      method: "GET",
+      url: ROUTES.GET_MOVIES + page + "&title=" + title + "&genre=" + genre,
+      method: METODS.GET,
     });
     return response.data;
   };
 
   getMovie = async ({ id }) => {
     const response = await httpService.request({
-      url: ROUTES.GET_MOVIES + id + "/",
-      method: "GET",
+      url: ROUTES.GET_MOVIE + id + "/",
+      method: METODS.GET,
     });
     return response.data;
   };

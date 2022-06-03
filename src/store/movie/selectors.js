@@ -8,4 +8,7 @@ const moviesListSelector = () =>
 const movieSelector = () =>
   createSelector(moviesStateSelector, (state) => state.movie);
 
-export { moviesListSelector, movieSelector };
+const countSelector = () =>
+  createSelector(moviesStateSelector, (state) => state.count);
+
+export { moviesListSelector, movieSelector, countSelector };
