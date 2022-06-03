@@ -9,7 +9,7 @@ const Search = ({ movies }) => {
         id="movie"
         options={movies.map((option) => option.title)}
         renderInput={(params) => <TextField {...params} label="Search" />}
-        onInputChange={(event, value) => console.log(value)}
+        onInputChange={(event,value) => console.log(value) }
       />
     </Stack>
   );

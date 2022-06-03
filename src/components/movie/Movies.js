@@ -41,8 +41,7 @@ const Movies = ({
           })}
         </Grid>
         <Pagination
-          page={page}
-          onChange={() => setPage((current) => current + 1)}
+          onChange={(e, value) => setPage(value)}
           count={Math.ceil(count / 10)}
         />
         <RadioButtonsGroup genre={genre} setGenre={setGenre} />
