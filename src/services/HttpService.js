@@ -1,6 +1,4 @@
 import axios from "axios";
-import camelCase from "lodash/camelCase";
-import mapKeys from "lodash/mapKeys";
 
 class HttpClient {
   constructor() {
@@ -32,15 +30,7 @@ class HttpClient {
 class HttpService {
   constructor(httpClient) {
     this.httpClient = httpClient;
-    this.init();
   }
-
-  init = () => {
-    this.addResponseInterceptors(
-      (response) => mapKeys(response.data, (_, key) => camelCase(key)),
-      (error) => Promise.reject(error.response)
-    );
-  };
 
   request = (requestConfig) => {
     return this.httpClient.request(requestConfig);
